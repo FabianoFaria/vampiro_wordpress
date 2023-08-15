@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  wordpress:
+    image: vampiro_wordpress
+    container_name: wordpress
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "8080:80"
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+      - ./wp-config.php:/var/www/html/wp-config.php
+    command: ["apache2-foreground"]
+    environment:
+      - WORDPRESS_DB_HOST=$MYSQL_HOST:33060
+      - WORDPRESS_DB_USER=$MYSQL_USER
+      - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_NAME=wordpress
+      - APACHE_SERVER_NAME= localhost # Adicione esta linha
