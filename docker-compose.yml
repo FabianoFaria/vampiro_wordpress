@@ -12,9 +12,42 @@ services:
       - ./wp-content:/var/www/html/wp-content
       - ./wp-config.php:/var/www/html/wp-config.php
     command: ["apache2-foreground"]
+    networks:
+      - shared_network
     environment:
-      - WORDPRESS_DB_HOST=$MYSQL_HOST:33060
+      - WORDPRESS_DB_HOST=$MYSQL_HOST:$MYSQL_PORT
       - WORDPRESS_DB_USER=$MYSQL_USER
       - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
-      - WORDPRESS_DB_NAME=wordpress
-      - APACHE_SERVER_NAME= localhost # Adicione esta linha
+      - WORDPRESS_DB_NAME=$MYSQL_DATABASE
+      - APACHE_SERVER_NAME=vampiroblogueirinho.com.br
+      - VIRTUAL_HOST=vampiroblogueirinho.com.br,www.vampiroblogueirinho.com.br
+      - LETSENCRYPT_HOST=vampiroblogueirinho.com.br,www.vampiroblogueirinho.com.br
+      - LETSENCRYPT_EMAIL=vampiroblogueirinho@gmail.com # Insira um e-mail válido
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+  letsencrypt-nginx-proxy-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt
+    restart: unless-stopped
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+      - DEFAULT_EMAIL=vampiroblogueirinho@gmail.com # Adicione um e-mail válido para o Let's Encrypt
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+
+networks:
+  shared_network:
+    external: true
