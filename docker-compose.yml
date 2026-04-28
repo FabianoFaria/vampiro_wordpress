@@ -5,6 +5,8 @@ services:
     image: vampiro_wordpress
     container_name: wordpress
     restart: unless-stopped
+    labels:
+      - "com.vampiroblogueirinho.version=1.1.0"
     env_file: .env
     ports:
       - "8080:80"

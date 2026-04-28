@@ -1,4 +1,4 @@
-# Vampiro Blogueirinho — WordPress
+# Vampiro Blogueirinho — WordPress ![version](https://img.shields.io/badge/version-1.1.0-blue)
 
 Dockerized WordPress setup for [vampiroblogueirinho.com.br](https://vampiroblogueirinho.com.br), configured for CI/CD pipelines and multi-project Docker Compose integration.
 
