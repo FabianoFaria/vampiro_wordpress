@@ -19,10 +19,10 @@ services:
       - WORDPRESS_DB_USER=$MYSQL_USER
       - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
       - WORDPRESS_DB_NAME=$MYSQL_DATABASE
-      - APACHE_SERVER_NAME=vampiroblogueirinho.com.br
-      - VIRTUAL_HOST=vampiroblogueirinho.com.br,www.vampiroblogueirinho.com.br
-      - LETSENCRYPT_HOST=vampiroblogueirinho.com.br,www.vampiroblogueirinho.com.br
-      - LETSENCRYPT_EMAIL=vampiroblogueirinho@gmail.com # Insira um e-mail válido
+      - APACHE_SERVER_NAME=$APACHE_SERVER_NAME
+      - VIRTUAL_HOST=$VIRTUAL_HOST
+      - LETSENCRYPT_HOST=$LETSENCRYPT_HOST
+      - LETSENCRYPT_EMAIL=$LETSENCRYPT_EMAIL
   nginx-proxy:
     image: jwilder/nginx-proxy
     container_name: nginx-proxy
@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
     environment:
       - NGINX_PROXY_CONTAINER=nginx-proxy
-      - DEFAULT_EMAIL=vampiroblogueirinho@gmail.com # Adicione um e-mail válido para o Let's Encrypt
+      - DEFAULT_EMAIL=$LETSENCRYPT_EMAIL
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./certs:/etc/nginx/certs
